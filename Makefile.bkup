@@ -1,0 +1,75 @@
+####################################################################
+
+SHELL = /bin/sh
+
+#######################################
+
+LIBNAME = volren
+RM = rm -f 
+AR = ar cq
+
+C++ = g++
+CCFLAGS = -g  -DREAL=float 
+
+TOP = ..
+
+INCLUDE = -I. 
+
+OBJS = Map.o Trans_Stack.o render.o image.o  render_aux.o image_composite.o
+  
+SRCS = Map.C Trans_Stack.C render.C image.C  render_aux.C image_composite.C
+
+.SUFFIXES: .C
+.C.o:
+	$(C++) $(CCFLAGS) $(INCLUDE) -c $<
+
+default: all
+
+all: lib$(LIBNAME).a  testmain 
+
+lib$(LIBNAME).a : $(OBJS) render.h
+	$(RM) $@
+	$(AR) $@ $(OBJS)
+
+## a simple test program 
+testmain: testmain.o lib$(LIBNAME).a 
+	$(C++) -o testmain testmain.o -L. -l$(LIBNAME) -lm 
+
+###########################################################
+
+clean:
+	rm -f *.o *.a
+
+depend: Makefile $(SRCS)
+	makedepend -fMakefile $(CCFLAGS) $(INCLUDE) $(SRCS)
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+Map.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+Map.o: /usr/include/sys/va_list.h /usr/include/string.h Map.h
+Trans_Stack.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+Trans_Stack.o: /usr/include/sys/va_list.h /usr/include/math.h Trans_Stack.h
+render.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+render.o: /usr/include/sys/va_list.h /usr/include/stdlib.h
+render.o: /usr/include/string.h /usr/include/math.h /usr/include/assert.h
+render.o: render.h /usr/include/strings.h /usr/include/sys/types.h
+render.o: /usr/include/sys/isa_defs.h /usr/include/sys/machtypes.h
+render.o: /usr/include/sys/int_types.h /usr/include/sys/select.h
+render.o: /usr/include/sys/time.h /usr/include/sys/time.h
+render.o: /usr/include/unistd.h /usr/include/sys/unistd.h image.h Map.h
+render.o: Trans_Stack.h minmax.h render_aux.h
+image.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+image.o: /usr/include/sys/va_list.h /usr/include/string.h
+image.o: /usr/include/assert.h /usr/include/stdlib.h image.h minmax.h
+render_aux.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+render_aux.o: /usr/include/sys/va_list.h /usr/include/stdlib.h
+render_aux.o: /usr/include/string.h /usr/include/math.h /usr/include/memory.h
+render_aux.o: render.h /usr/include/strings.h /usr/include/sys/types.h
+render_aux.o: /usr/include/sys/isa_defs.h /usr/include/sys/machtypes.h
+render_aux.o: /usr/include/sys/int_types.h /usr/include/sys/select.h
+render_aux.o: /usr/include/sys/time.h /usr/include/sys/time.h
+render_aux.o: /usr/include/unistd.h /usr/include/sys/unistd.h image.h Map.h
+render_aux.o: Trans_Stack.h minmax.h
+image_composite.o: /usr/include/stdio.h /usr/include/sys/feature_tests.h
+image_composite.o: /usr/include/sys/va_list.h /usr/include/string.h image.h
+image_composite.o: /usr/include/stdlib.h minmax.h

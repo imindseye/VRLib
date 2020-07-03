@@ -1,0 +1,68 @@
+####################################################################
+
+SHELL = /bin/sh
+
+#######################################
+
+LIBNAME = volren
+RM = rm -f 
+AR = ar cq
+
+C++ = CC
+CCFLAGS = -g -n32 -DREAL=float 
+
+TOP = ..
+
+INCLUDE = -I. 
+
+OBJS = Map.o Trans_Stack.o render.o image.o  render_aux.o image_composite.o
+  
+SRCS = Map.C Trans_Stack.C render.C image.C  render_aux.C image_composite.C
+
+.SUFFIXES: .C
+.C.o:
+	$(C++) $(CCFLAGS) $(INCLUDE) -c $<
+
+default: all
+
+all: lib$(LIBNAME).a  testmain 
+
+lib$(LIBNAME).a : $(OBJS) render.h
+	$(RM) $@
+	$(AR) $@ $(OBJS)
+
+## a simple test program 
+testmain: testmain.o lib$(LIBNAME).a 
+	$(C++) -o testmain testmain.o -L. -l$(LIBNAME) -lm 
+
+###########################################################
+
+clean:
+	rm -f *.o *.a
+
+depend: Makefile $(SRCS)
+	makedepend -fMakefile $(CCFLAGS) $(INCLUDE) $(SRCS)
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+Map.o: /usr/include/stdio.h /usr/include/standards.h /usr/include/sgidefs.h
+Map.o: /usr/include/string.h Map.h
+Trans_Stack.o: /usr/include/stdio.h /usr/include/standards.h
+Trans_Stack.o: /usr/include/sgidefs.h /usr/include/math.h Trans_Stack.h
+render.o: /usr/include/stdio.h /usr/include/standards.h
+render.o: /usr/include/sgidefs.h /usr/include/stdlib.h /usr/include/string.h
+render.o: /usr/include/math.h /usr/include/assert.h render.h
+render.o: /usr/include/strings.h /usr/include/sys/types.h
+render.o: /usr/include/unistd.h image.h Map.h Trans_Stack.h minmax.h
+render.o: render_aux.h
+image.o: /usr/include/stdio.h /usr/include/standards.h /usr/include/sgidefs.h
+image.o: /usr/include/string.h /usr/include/assert.h /usr/include/stdlib.h
+image.o: image.h minmax.h
+render_aux.o: /usr/include/stdio.h /usr/include/standards.h
+render_aux.o: /usr/include/sgidefs.h /usr/include/stdlib.h
+render_aux.o: /usr/include/string.h /usr/include/math.h /usr/include/memory.h
+render_aux.o: render.h /usr/include/strings.h /usr/include/sys/types.h
+render_aux.o: /usr/include/unistd.h image.h Map.h Trans_Stack.h minmax.h
+image_composite.o: /usr/include/stdio.h /usr/include/standards.h
+image_composite.o: /usr/include/sgidefs.h /usr/include/string.h image.h
+image_composite.o: /usr/include/stdlib.h minmax.h
